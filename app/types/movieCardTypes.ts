@@ -6,5 +6,9 @@ export type movieCardType = {
     rating: number,
     duration: string,
     href: string,
-    tagline: string
+    tagline: string,
+    overview: string,
+    genres: string[],
+    country: string,
+    production_companies: string[]
 }
