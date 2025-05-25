@@ -1,26 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Users, Wallet } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import RootContext, { RootContextType } from "@/app/RootContext";
 
 export function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
+ const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
     { name: "HOME", href: "/" },
     { name: "MOVIES", href: "/movies" },
     { name: "TV SHOWS", href: "/tvshows" },
-    { name: "FAVORITES", href: "/favorite" },
+    { name: "FAVORITES", href: "/favorites" },
   ];
 
   return (
-    <nav className=" py-4 text-white  sticky top-0 z-50 w-full">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className=" py-4 text-white   w-full">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
+
           {/* Logo Section */}
           <motion.div
             className="flex items-center"
