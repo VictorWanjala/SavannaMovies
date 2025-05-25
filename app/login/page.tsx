@@ -29,7 +29,7 @@ export default function Home() {
         </Label>
         <Input value={password} onChange={(e)=>setPassword(e.target.value)} />
       </div>
-      <Button onClick={handleSubmit}>Login</Button>
+      <Button className="rounded" onClick={handleSubmit}>Login</Button>
     </div>
 
    </div>
