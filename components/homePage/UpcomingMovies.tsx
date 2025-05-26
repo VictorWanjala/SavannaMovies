@@ -8,7 +8,7 @@ import useAxios from "../../hooks/useAxios";
 
 
 const UpcomingMovies = () => {
-  const { request, imageUrl } = useAxios();
+  const { request } = useAxios();
   const [movies, setMovies] = useState(upcomingMovies);
   const [page, setPage] = useState(1);
 

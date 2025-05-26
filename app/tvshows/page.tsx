@@ -1,12 +1,31 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MovieCard from "../../components/ui/movieCard";
 import { upcomingMovies } from "../../components/data/upcoming";
 import Search from "../../components/ui/search"; 
+import useAxios from "../../hooks/useAxios";
 
 const TvShows = () => {
   const [filteredMovies, setFilteredMovies] = useState(upcomingMovies);
+  const [page, setPage] = useState(1);
+
+  const {request} = useAxios();
+
+  useEffect(() => {
+    fetchTvShows();
+  }, [page]);
+
+  async function fetchTvShows(){
+    const response = await request({
+      method: "GET",
+      url: `tv/popular`,
+      params: {page}
+    })
+    if (response) {
+      setFilteredMovies(response.results || []);
+    }
+  }
 
   return (
     <div className="container mx-auto px-4 py-28 max-md:py-10">
@@ -28,6 +47,6 @@ const TvShows = () => {
       </div>
     </div>
   );
-};
+}
 
 export default TvShows;

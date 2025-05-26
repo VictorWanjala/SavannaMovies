@@ -1,12 +1,32 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MovieCard from "../../components/ui/movieCard";
 import { upcomingMovies } from "../../components/data/upcoming";
 import Search from "../../components/ui/search"; 
+import useAxios from "../../hooks/useAxios";
 
 const Movies = () => {
   const [filteredMovies, setFilteredMovies] = useState(upcomingMovies);
+  const [page, setPage] = useState(1);
+
+  const {request} = useAxios();
+
+  useEffect(() => { 
+    fetchMovies();
+   }
+, [page]);
+
+async function fetchMovies() {
+  const response = await request({
+    method: "GET",
+    url: `movie/popular`,
+    params: { page},
+  })
+  if (response) {
+    setFilteredMovies(response.results || []);
+  }
+}
 
   return (
     <div className="container mx-auto px-4 py-28 max-md:py-10">
@@ -14,7 +34,7 @@ const Movies = () => {
         <h2 className="text-3xl font-bold mb-4 text-white">Movies</h2>
         <div className="pr-7 max-md:pr-3">
           <Search
-            searchUrl="/api/search/movies" 
+            searchUrl="search/movie" 
             placeholder="Search movies..."
             onResults={results => setFilteredMovies(results.length ? results : upcomingMovies)}
           />
