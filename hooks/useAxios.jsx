@@ -1,12 +1,14 @@
 import axios from "axios";
 import { useContext } from "react";
-import AppContext from "@/components/AppContext";
+// import AppContext from "../app/RootContext";
 import { toast } from "sonner";
 
-const baseUrl = "/api/";
+const baseUrl = "https://api.themoviedb.org/3/";
+const imageUrl = "https://image.tmdb.org/t/p/";
+
 
 const useAxios = () => {
-  const { setLoading } = useContext(AppContext);
+  // const { setLoading } = useContext(AppContext);
 
   const request = async (obj = {}) => {
     const {
@@ -28,7 +30,7 @@ const useAxios = () => {
         throw { custom: true, message: "Method and URL are required" };
       }
 
-      if (show_loading) setLoading(true);
+      // if (show_loading) setLoading(true);
 
       const res = await axios({
         method,
@@ -36,7 +38,12 @@ const useAxios = () => {
         data: body,
         params,
         responseType,
-        withCredentials: true,
+        headers: {
+          ...headers,
+          Authorization: `Bearer ${
+            process.env.NEXT_PUBLIC_ACCESS_TOKEN
+          }`,
+        },
       });
 
       if (show_success) {
@@ -70,11 +77,11 @@ const useAxios = () => {
       }
       return { error: true, message: e.message || "An error occurred" };
     } finally {
-      if (show_loading) setLoading(false);
+      // if (show_loading) setLoading(false);
     }
   };
 
-  return request;
+  return { request, imageUrl };
 };
 
 export default useAxios;

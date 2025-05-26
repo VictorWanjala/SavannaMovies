@@ -9,7 +9,7 @@ const Home = () => {
         <HeroSection /> 
       </div>
      
-       <UpcomingMovies />  
+       <UpcomingMovies />
     
      
      

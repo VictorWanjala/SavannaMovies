@@ -1,6 +1,7 @@
 "use client";
 
 import { upcomingMovies } from "@/components/data/upcoming";
+import RelatedMovies from "@/components/moviePage/RelatedMovies";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Calendar, Clock, Star } from "lucide-react";
 import Image from "next/image";
@@ -99,6 +100,7 @@ const MovieDetails = () => {
           </div>
         </div>
       </div>
+      <RelatedMovies />
     </div>
   );
 };
