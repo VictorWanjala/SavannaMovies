@@ -1,3 +1,9 @@
+
+type GenreType = {
+    id: number,
+    name: string
+}
+
 export type movieCardType = {
     id: number,
     poster_path: string,
@@ -8,7 +14,7 @@ export type movieCardType = {
     href: string,
     original_language: string,
     overview: string,
-    genres: string[],
+    genres: GenreType[],
     country: string,
     production_companies: string[]
 }

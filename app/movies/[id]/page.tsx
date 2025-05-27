@@ -3,16 +3,62 @@
 import { upcomingMovies } from "@/components/data/upcoming";
 import RelatedMovies from "@/components/moviePage/RelatedMovies";
 import { Button } from "@/components/ui/button";
+import useAxios from "@/hooks/useAxios";
+import { getImageUrl } from "@/lib/getImageUrl";
 import { ArrowLeft, Calendar, Clock, Star } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const MovieDetails = () => {
   const router = useRouter();
   const { id } = useParams();
+  const { request } = useAxios();
 
-  const movie = upcomingMovies.find((movie) => movie.id === Number(id));
+  type MovieType = {
+    poster_path?: string;
+    title?: string;
+    genres?: { name: string }[];
+    release_date?: string;
+    duration?: string | number;
+    vote_average?: number | string;
+    overview?: string;
+    country?: string;
+    production_companies?: (
+      | string
+      | {
+          name: string;
+          logo_path: string;
+          original_country: string;
+          id: number;
+        }
+    )[];
+  };
+
+  const [movie, setMovie] = useState<MovieType>({});
+
+  useEffect(() => {
+    fetchMovieDetails();
+  }, []);
+
+  async function fetchMovieDetails() {
+    if (!id) return;
+    const response = await request({
+      method: "GET",
+      url: `movie/${id}`,
+    });
+
+
+    if (response.error) {
+      return;
+    }
+    setMovie(response);
+  }
+
+ 
+
+
+  const imageUrl = getImageUrl({ path: movie?.poster_path });
 
   return (
     <div className="container mx-auto px-4 py-28 max-md:py-10">
@@ -27,7 +73,7 @@ const MovieDetails = () => {
       <div className="flex gap-20 items-center max-md:flex-col mt-8 max-md:gap-8 w-full">
         <div className="w-1/3 h-[500px] max-md:w-full">
           <Image
-            src={movie?.image ?? "/placeholder.jpg"}
+            src={imageUrl ?? "/hero.jpg"}
             alt={movie?.title ?? "Movie image"}
             width={500}
             height={500}
@@ -42,12 +88,12 @@ const MovieDetails = () => {
           </div>
           <div className="flex gap-5 max-md:flex-wrap">
             <div className="flex gap-3 max-md:flex-wrap">
-              {movie?.genres.map((genre, index) => (
+              {movie?.genres?.map((genre, index) => (
                 <span
                   key={index}
                   className="text-xs text-gray-900 bg-white px-3 py-2 rounded-full"
                 >
-                  {genre}
+                  {genre.name}
                 </span>
               ))}
             </div>
@@ -55,43 +101,40 @@ const MovieDetails = () => {
             <div className="flex gap-5 items-center">
               <p className="flex gap-1 text-white items-center">
                 <Calendar className="" size={16} />
-                <span className="text-sm">{movie?.releaseDate}</span>
+                <span className="text-sm">{movie?.release_date}</span>
               </p>
 
-              <p className="flex gap-1 text-white items-center">
-                <Clock className="" size={16} />
-                <span className="text-sm">{movie?.duration}</span>
-              </p>
+         
 
               <p className="flex gap-1 text-white items-center">
                 <Star className="" size={16} />
-                <span className="text-sm">{movie?.rating}</span>
+                <span className="text-sm">{movie?.vote_average}</span>
               </p>
             </div>
           </div>
           <p className="text-white my-6">{movie?.overview}</p>
           <div className="my-2 text-white flex gap-4">
             <div className="flex-flex-col">
-              <p className="text-right max-md:text-left">Country</p>
               <p className="text-right max-md:text-left">Genre</p>
               <p className="text-right max-md:text-left">Date Released</p>
               <p className="text-right max-md:text-left">Production</p>
             </div>
             <div className="flex-flex-col">
-              <p className="text-left">{movie?.country}</p>
               <p className="text-left">
                 {movie?.genres?.map((genre, i) => (
                   <span key={i}>
-                    {genre}
+                    {genre?.name}
                     {i < (movie.genres?.length ?? 0) - 1 && ", "}
                   </span>
                 ))}
               </p>
-              <p className="text-left">{movie?.releaseDate}</p>
+              <p className="text-left">{movie?.release_date}</p>
               <p className="text-left">
                 {movie?.production_companies?.map((company, i) => (
                   <span key={i}>
-                    {company}
+                    {typeof company === "string"
+                      ? company
+                      : company?.name}
                     {i < (movie.production_companies?.length ?? 0) - 1 && ", "}
                   </span>
                 ))}

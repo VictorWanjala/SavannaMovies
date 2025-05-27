@@ -15,7 +15,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ card }) => {
 
   return (
     <Link
-      href={`/movie/${card.id}`}
+      href={`/movies/${card.id}`}
       className="w-[350px] h-auto max-md:w-full text-white flex flex-col gap-4"
     >
       <div className="w-full h-[400px]">
