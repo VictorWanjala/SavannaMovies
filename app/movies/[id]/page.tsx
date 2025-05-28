@@ -1,6 +1,5 @@
 "use client";
 
-import { upcomingMovies } from "@/components/data/upcoming";
 import RelatedMovies from "@/components/moviePage/RelatedMovies";
 import { Button } from "@/components/ui/button";
 import useAxios from "@/hooks/useAxios";
@@ -14,6 +13,8 @@ const MovieDetails = () => {
   const router = useRouter();
   const { id } = useParams();
   const { request } = useAxios();
+
+  const sessionId = localStorage.getItem("session_id");
 
   type MovieType = {
     poster_path?: string;
@@ -55,6 +56,21 @@ const MovieDetails = () => {
     setMovie(response);
   }
 
+
+  async function addFavorite () {
+    let res = await request({
+      method: "POST",
+      url: `account/${21681798}/favorite`,
+      body: {
+        media_type: "movie",
+        media_id: id,
+        favorite: true,
+      },
+      params: {
+        session_id: sessionId,
+      }
+    })
+  }
  
 
 

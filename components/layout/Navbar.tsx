@@ -5,11 +5,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Users, Wallet } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
 import RootContext, { RootContextType } from "@/app/RootContext";
 
 export function Navbar() {
  const [isOpen, setIsOpen] = useState(false);
+ const sessionId = localStorage.getItem("session_id");
 
   const navItems = [
     { name: "HOME", href: "/" },
@@ -58,13 +58,13 @@ export function Navbar() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: 0.4 }}
               >
-                <Button
+               {sessionId ?  <div>Sign Out</div> : <Button
                   variant="outline"
                   asChild
                   className="rounded-full"
                 >
                   <Link href="/login">Sign In</Link>
-                </Button>
+                </Button>}
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
