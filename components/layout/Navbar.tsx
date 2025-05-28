@@ -5,11 +5,14 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Users, Wallet } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import RootContext, { RootContextType } from "@/app/RootContext";
+import useAuth from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
 
 export function Navbar() {
- const [isOpen, setIsOpen] = useState(false);
- const sessionId = localStorage.getItem("session_id");
+  const [isOpen, setIsOpen] = useState(false);
+  const { logout } = useAuth();
+  const router = useRouter();
+  const sessionId = localStorage.getItem("session_id");
 
   const navItems = [
     { name: "HOME", href: "/" },
@@ -22,7 +25,6 @@ export function Navbar() {
     <nav className=" py-4 text-white   w-full">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-
           {/* Logo Section */}
           <motion.div
             className="flex items-center"
@@ -30,8 +32,11 @@ export function Navbar() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <Link href="/" className="flex items-center space-x-2 group text-primary font-semibold">
-            SAVANNAMOVIES
+            <Link
+              href="/"
+              className="flex items-center space-x-2 group text-primary font-semibold"
+            >
+              SAVANNAMOVIES
             </Link>
           </motion.div>
 
@@ -58,21 +63,28 @@ export function Navbar() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: 0.4 }}
               >
-               {sessionId ?  <div>Sign Out</div> : <Button
-                  variant="outline"
-                  asChild
-                  className="rounded-full"
-                >
-                  <Link href="/login">Sign In</Link>
-                </Button>}
+                {sessionId ? (
+                  <Button
+                    onClick={() => {
+                      logout();
+                      router.push("/login");
+                      setIsOpen(false);
+                    }}
+                    className="rounded-full"
+                  >
+                    Sign Out
+                  </Button>
+                ) : (
+                  <Button variant="outline" asChild className="rounded-full">
+                    <Link href="/login">Sign In</Link>
+                  </Button>
+                )}
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: 0.5 }}
-              >
-                
-              </motion.div>
+              ></motion.div>
             </div>
           </div>
 
@@ -126,15 +138,27 @@ export function Navbar() {
                 </motion.div>
               ))}
               <div className="pt-2 space-y-3">
-                <Button
-                  variant="outline"
-                  className="w-full rounded-full"
-                  asChild
-                  onClick={() => setIsOpen(false)}
-                >
-                  <Link href="/login">Sign In</Link>
-                </Button>
-               
+                {sessionId ? (
+                  <Button
+                    className="w-full rounded-full"
+                    onClick={() => {
+                      logout();
+                      router.push("/login");
+                      setIsOpen(false);
+                    }}
+                  >
+                    Sign Out
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    className="w-full rounded-full"
+                    asChild
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Link href="/login">Sign In</Link>
+                  </Button>
+                )}
               </div>
             </div>
           </motion.div>

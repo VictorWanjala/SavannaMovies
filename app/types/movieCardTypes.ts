@@ -23,8 +23,15 @@ export type movieCardType = {
     overview: string,
     genres: GenreType[],
     country: string,
-    production_companies: string[]
-}
+production_companies?: (
+      | string
+      | {
+          name: string;
+          logo_path: string;
+          original_country: string;
+          id: number;
+        }
+    )[];}
 
 export type tvShowCardType = {
     id: number,
@@ -38,3 +45,5 @@ export type tvShowCardType = {
     genres: GenreType[],
     production_companies: ProductionCompanyType[]
 }
+
+

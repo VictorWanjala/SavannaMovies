@@ -5,6 +5,7 @@ import { Navbar } from "../components/layout/Navbar"
 import { Inter } from "next/font/google";
 import Footer from "../components/layout/Footer"
 import Provider from "@/components/Provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,6 +29,7 @@ export default function RootLayout({
       <body
         className={`${inter.className} bg-gradient from-[#000000]/50 to-[#1a1a1a]/50`}
       >
+        <Toaster richColors  />
         <Provider>
           <div className="">
           <Navbar />

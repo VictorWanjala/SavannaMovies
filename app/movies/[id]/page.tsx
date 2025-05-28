@@ -7,6 +7,7 @@ import { getImageUrl } from "@/lib/getImageUrl";
 import { ArrowLeft, Calendar, Clock, Star } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
+import { movieCardType } from "@/app/types/movieCardTypes";
 import React, { useEffect, useState } from "react";
 
 const MovieDetails = () => {
@@ -16,27 +17,9 @@ const MovieDetails = () => {
 
   const sessionId = localStorage.getItem("session_id");
 
-  type MovieType = {
-    poster_path?: string;
-    title?: string;
-    genres?: { name: string }[];
-    release_date?: string;
-    duration?: string | number;
-    vote_average?: number | string;
-    overview?: string;
-    country?: string;
-    production_companies?: (
-      | string
-      | {
-          name: string;
-          logo_path: string;
-          original_country: string;
-          id: number;
-        }
-    )[];
-  };
 
-  const [movie, setMovie] = useState<MovieType>({});
+
+  const [movie, setMovie] = useState<movieCardType | null>(null);
 
   useEffect(() => {
     fetchMovieDetails();
@@ -58,6 +41,7 @@ const MovieDetails = () => {
 
 
   async function addFavorite () {
+    if (!sessionId) return;
     let res = await request({
       method: "POST",
       url: `account/${21681798}/favorite`,
@@ -68,7 +52,9 @@ const MovieDetails = () => {
       },
       params: {
         session_id: sessionId,
-      }
+      },
+      show_success: true,
+      success_message: "Added to favorites",
     })
   }
  
@@ -100,7 +86,7 @@ const MovieDetails = () => {
         <div className="flex flex-col gap-4 w-1/2 max-md:w-full">
           <div className="flex justify-between items-center">
             <h3 className="text-2xl text-white">{movie?.title}</h3>
-            <Button className="rounded-full">Add To Favorite</Button>
+            <Button className="rounded-full" onClick={addFavorite}>Add To Favorite</Button>
           </div>
           <div className="flex gap-5 max-md:flex-wrap">
             <div className="flex gap-3 max-md:flex-wrap">
