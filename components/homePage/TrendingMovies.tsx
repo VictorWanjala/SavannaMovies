@@ -2,14 +2,13 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import MovieCard from "../ui/movieCard";
-import { upcomingMovies } from "../data/upcoming";
 import useAxios from "../../hooks/useAxios";
 import { Button } from "../ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const Trending = () => {
   const { request } = useAxios();
-  const [movies, setMovies] = useState(upcomingMovies);
+  const [movies, setMovies] = useState<any[]>([]);
   const [page, setPage] = useState(1);
 
   const scrollRef = useRef<HTMLDivElement>(null);

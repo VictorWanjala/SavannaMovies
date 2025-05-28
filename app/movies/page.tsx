@@ -2,38 +2,37 @@
 
 import React, { useEffect, useState } from "react";
 import MovieCard from "../../components/ui/movieCard";
-import { upcomingMovies } from "../../components/data/upcoming";
-import Search from "../../components/ui/search"; 
+import Search from "../../components/ui/search";
 import useAxios from "../../hooks/useAxios";
-import Pagination from "../../components/ui/pagination"
-
+import Pagination from "../../components/ui/pagination";
 
 const Movies = () => {
-  const [filteredMovies, setFilteredMovies] = useState(upcomingMovies);
+  const [filteredMovies, setFilteredMovies] = useState<any[]>([]);
+  const [originalMovies, setOriginalMovies] = useState<any[]>([]);
+
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
 
-  const {request} = useAxios();
+  const { request } = useAxios();
 
-  useEffect(() => { 
+  useEffect(() => {
     fetchMovies();
-   }
-, [page]);
+  }, [page]);
 
-async function fetchMovies() {
-  const response = await request({
-    method: "GET",
-    url: `movie/popular`,
-    params: { page},
-  })
-  if (response) {
-    setFilteredMovies(response.results || []);
-    setTotalPages(response.total_pages || 1);
-    setTotalResults(response.total_results || 0);
+  async function fetchMovies() {
+    const response = await request({
+      method: "GET",
+      url: `movie/popular`,
+      params: { page },
+    });
+    if (response) {
+      setFilteredMovies(response.results || []);
+      setOriginalMovies(response.results || []);
+      setTotalPages(response.total_pages || 1);
+      setTotalResults(response.total_results || 0);
+    }
   }
-}
-
 
   const handleNextPage = () => {
     if (page < totalPages) {
@@ -46,23 +45,24 @@ async function fetchMovies() {
     }
   };
 
-
   return (
     <div className="container mx-auto px-4 py-28 max-md:py-10">
-      <div className="flex items-center justify-between max-md:flex-col">
+      <div className="flex items-center justify-between flex-wrap max-md:gap-3">
         <h2 className="text-3xl font-bold mb-4 text-secondary">Movies</h2>
         <div className="pr-7 max-md:pr-3">
           <Search
-            searchUrl="search/movie" 
+            searchUrl="search/movie"
             placeholder="Search movies..."
-            onResults={results => setFilteredMovies(results.length ? results : upcomingMovies)}
+            onResults={(results) =>
+              setFilteredMovies(results.length ? results : originalMovies)
+            }
           />
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-6">
+      <div className="flex flex-wrap gap-6 mt-6">
         {filteredMovies.map((movie, i) => (
-          <MovieCard key={movie.id || i} card={movie} />
+          <MovieCard key={i} card={movie} />
         ))}
       </div>
       <Pagination

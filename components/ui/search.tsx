@@ -1,6 +1,8 @@
 "use client";
 
+import useAxios from "@/hooks/useAxios";
 import React, { useState, useEffect } from "react";
+
 
 type SearchProps = {
   searchUrl: string;
@@ -17,6 +19,7 @@ const Search: React.FC<SearchProps> = ({
 }) => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<any[]>([]);
+  const {baseUrl, request} = useAxios()
 
   useEffect(() => {
     if (!query.trim()) {
@@ -26,28 +29,27 @@ const Search: React.FC<SearchProps> = ({
     }
 
     const handler = setTimeout(async () => {
-      try {
-        const res = await fetch(`${searchUrl}?q=${encodeURIComponent(query)}`);
-        if (!res.ok) throw new Error("");
-        const data = await res.json();
-        setResults(data.results || data);
-        onResults && onResults(data.results || data);
-      } catch (err: any) {
-        setResults([]);
-        console.error("Search error:", err);
-      } finally {
-      }
+      
+        const response = await request({
+          method: "GET",
+          url: searchUrl,
+          params: { query },
+        });
+        if (response.error) return;
+        const data = response;
+        setResults(data.results || []);
+        onResults && onResults(data.results || []);
+    
     }, debounceMs);
 
     return () => clearTimeout(handler);
-    // eslint-disable-next-line
   }, [query, searchUrl]);
 
   return (
-    <div className="flex flex-col items-center gap-2 w-full max-w-md">
+    <div className="flex flex-col items-center gap-2 max-md:w-full w-[730px]">
       <input
         type="text"
-        className="flex-1 px-4 py-2 rounded border border-gray-300 focus:outline-none focus:ring"
+        className="flex-1 px-4 py-2 w-full rounded border border-secondary focus:outline-none focus:ring"
         placeholder={placeholder}
         value={query}
         onChange={(e) => setQuery(e.target.value)}

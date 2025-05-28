@@ -5,7 +5,7 @@ function useSearch(props) {
   const {
     search,
     searchUrl,
-    baseUrl = "/api/",
+    baseUrl = "https://api.themoviedb.org/3/",
     setDocs = () => {},
     setIsLoading = () => {},
     setShowPagination = () => {},

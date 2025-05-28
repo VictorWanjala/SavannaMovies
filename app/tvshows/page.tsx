@@ -1,37 +1,37 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import MovieCard from "../../components/ui/movieCard";
-import { upcomingMovies } from "../../components/data/upcoming";
-import Search from "../../components/ui/search"; 
+import Search from "../../components/ui/search";
 import useAxios from "../../hooks/useAxios";
 import Pagination from "../../components/ui/pagination";
+import TvShowCard from "../../components/ui/tvShowCard";
 
 const TvShows = () => {
-  const [filteredMovies, setFilteredMovies] = useState(upcomingMovies);
+  const [filteredMovies, setFilteredMovies] = useState<any[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
+  const [originalMovies, setOriginalMovies] = useState<any[]>([]);
 
-  const {request} = useAxios();
+  const { request } = useAxios();
 
   useEffect(() => {
     fetchTvShows();
   }, [page]);
 
-  async function fetchTvShows(){
+  async function fetchTvShows() {
     const response = await request({
       method: "GET",
       url: `tv/popular`,
-      params: {page}
-    })
+      params: { page },
+    });
     if (response) {
       setFilteredMovies(response.results || []);
+      setOriginalMovies(response.results || []);
       setTotalPages(response.total_pages || 1);
       setTotalResults(response.total_results || 0);
     }
   }
-
 
   const handleNextPage = () => {
     if (page < totalPages) {
@@ -50,23 +50,30 @@ const TvShows = () => {
         <h2 className="text-3xl font-bold mb-4 text-secondary">TV Shows</h2>
         <div className="pr-7 max-md:pr-3">
           <Search
-            searchUrl="/api/search/movies" 
-            placeholder="Search movies..."
-            onResults={results => setFilteredMovies(results.length ? results : upcomingMovies)}
+            searchUrl="search/tv"
+            placeholder="Search TV Shows..."
+            onResults={(results) =>
+              setFilteredMovies(results.length ? results : originalMovies)
+            }
           />
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-6">
+      <div className="flex flex-wrap gap-6 mt-6">
         {filteredMovies.map((movie, i) => (
-          <MovieCard key={movie.id || i} card={movie} />
+          <TvShowCard key={i} card={movie} />
         ))}
       </div>
       <div className="my-12 ">
-       <Pagination currentPage={page} totalPages={totalPages} onNext={handleNextPage} onPrevious={handlePreviousPage} />
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          onNext={handleNextPage}
+          onPrevious={handlePreviousPage}
+        />
       </div>
     </div>
   );
-}
+};
 
 export default TvShows;

@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
-import MovieCard from "../../components/ui/movieCard";
 import { useParams } from "next/navigation";
 import useAxios from "@/hooks/useAxios";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import TvShowCard from "../ui/tvShowCard";
 
-const RelatedMovies = () => {
+const RelatedTVshows = () => {
   const [movies, setMovies] = useState([]);
 
   const { id } = useParams();
@@ -19,7 +19,7 @@ const RelatedMovies = () => {
   async function fetchRelatedMovies() {
     const response = await request({
       method: "GET",
-      url: `movie/${id}/recommendations`,
+      url: `tv/${id}/recommendations`,
     });
     if (response.error) {
       return;
@@ -50,7 +50,7 @@ const RelatedMovies = () => {
   return (
     <div className="container mx-auto px-4 py-28 max-md:py-10">
       <h2 className="text-2xl font-bold mb-6 text-secondary text-center">
-        Related Movies
+        Related TV Shows
       </h2>
 
       <div
@@ -59,7 +59,7 @@ const RelatedMovies = () => {
       >
         {movies.map((movie, i) => (
           <div key={i} className="w-[350px] mx-2">
-            <MovieCard card={movie} />
+            <TvShowCard card={movie} />
           </div>
         ))}
       </div>
@@ -82,4 +82,4 @@ const RelatedMovies = () => {
   );
 };
 
-export default RelatedMovies;
+export default RelatedTVshows;

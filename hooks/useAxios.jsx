@@ -81,7 +81,7 @@ const useAxios = () => {
     }
   };
 
-  return { request, imageUrl };
+  return { request, imageUrl, baseUrl };
 };
 
 export default useAxios;
