@@ -9,6 +9,7 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { movieCardType } from "@/app/types/movieCardTypes";
 import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const MovieDetails = () => {
   const router = useRouter();
@@ -46,7 +47,10 @@ useEffect(() => {
 
 
   async function addFavorite () {
-    if (!sessionId) return;
+    if (!sessionId) {
+      toast.error("Please login to add to favorites");
+      return;
+    };
     const res = await request({
       method: "POST",
       url: `account/${21681798}/favorite`,
