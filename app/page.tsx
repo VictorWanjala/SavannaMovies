@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import HeroSection from '@/components/homePage/Hero'
 import UpcomingMovies from '@/components/homePage/UpcomingMovies'
 import Trending from '@/components/homePage/TrendingMovies'
@@ -11,8 +11,12 @@ const Home = () => {
   // const { saveSessionId} = useAuth()
   const {request} = useAxios()
 
-  const token = localStorage.getItem("token")
+const [token, setToken] = useState<string | null>(null);
 
+useEffect(() => {
+  const storedTOken = localStorage.getItem("token");
+  setToken(storedTOken);
+}, []);
  
 
   useEffect(() => {
