@@ -5,11 +5,12 @@ import MovieCard from "../ui/movieCard";
 import useAxios from "../../hooks/useAxios";
 import Pagination from "../ui/pagination";
 import TvShowCard from "../ui/tvShowCard";
+import { tvShowCardType } from "@/app/types/movieCardTypes";
 
 const UpcomingMovies = () => {
   const { request } = useAxios();
   const [movies, setMovies] = useState([]);
-  const [shows, setShows] = useState<any[]>([]);
+  const [shows, setShows] = useState<tvShowCardType[]>([]);
   const [page, setPage] = useState(1);
   const [tvPage, setTvPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -53,6 +54,10 @@ const UpcomingMovies = () => {
       setTotalTVResults(response.total_results || 0);
     }
   }
+
+
+  console.log(totalResults)
+  console.log(totalTVResults)
 
   const handleNextPage = () => {
     if (page < totalPages) {

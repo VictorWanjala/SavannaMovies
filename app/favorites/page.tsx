@@ -5,13 +5,12 @@ import MovieCard from "../../components/ui/movieCard";
 import Pagination from "../../components/ui/pagination";
 import useAxios from "../../hooks/useAxios";
 import TvShowCard from "@/components/ui/tvShowCard";
+import { movieCardType, tvShowCardType } from "../types/movieCardTypes";
 
 const Favorites = () => {
-  const [filteredMovies, setFilteredMovies] = useState<any[]>([]);
-  const [favoriteMovies, setFavoriteMovies] = useState<any[]>([]);
+  const [favoriteMovies, setFavoriteMovies] = useState<movieCardType[]>([]);
 
-  const [filteredTvShows, setFilteredTvShows] = useState<any[]>([]);
-  const [favoriteTvShows, setFavoriteTvShows] = useState<any[]>([]);
+  const [favoriteTvShows, setFavoriteTvShows] = useState<tvShowCardType[]>([]);
 
   const [page, setPage] = useState(1);
   const [tvPage, setTvPage] = useState(1);
@@ -46,7 +45,6 @@ const Favorites = () => {
       },
     });
     if (!response?.error) {
-      setFilteredMovies(response.results || []);
       setFavoriteMovies(response.results || []);
       setTotalPages(response.total_pages || 1);
       setTotalResults(response.total_results || 0);
@@ -64,10 +62,8 @@ const Favorites = () => {
     });
 
 
-    console.log("TV Shows Response:", response?.results);
 
     if (!response?.error) {
-      setFilteredTvShows(response.results || []);
       setFavoriteTvShows(response.results || []);
       setTotalTVPages(response.total_pages || 1);
       setTotalTVResults(response.total_results || 0);
@@ -123,13 +119,13 @@ const Favorites = () => {
         <>
           {activeTab === "Favorite Movies" ? (
             <div className="flex flex-wrap gap-6 mt-6">
-              {filteredMovies.map((movie, i) => (
+              {favoriteMovies.map((movie, i) => (
                 <MovieCard key={i} card={movie} />
               ))}
             </div>
           ) : (
             <div className="flex flex-wrap gap-6 mt-6">
-              {filteredTvShows.map((movie, i) => (
+              {favoriteTvShows.map((movie, i) => (
                 <TvShowCard key={i} card={movie} />
               ))}
             </div>

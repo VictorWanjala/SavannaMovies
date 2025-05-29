@@ -21,7 +21,6 @@ export default function Home() {
     setLoading(true);
     toast.loading("Logging in...");
 
-    {loading && toast.loading("Logging in...")}
     try {
       const response = await axios({
         method: "POST",
@@ -56,6 +55,7 @@ export default function Home() {
       setLoading(false);
       return;
     }finally{
+      toast.dismiss()
       setLoading(false);
     }
 
@@ -88,7 +88,7 @@ export default function Home() {
         </Button>
         <div className="flex justify-center items-center my-1">
           <span className="text-sm text-gray-500">
-            Don't have an account?{" "}
+            Don&rsquo;t have an account?{" "}
             <a href="/signup" className="text-secondary hover:underline">
               Sign Up
             </a>
