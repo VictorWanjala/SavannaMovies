@@ -15,8 +15,12 @@ const MovieDetails = () => {
   const { id } = useParams();
   const { request } = useAxios();
 
-  const sessionId = localStorage.getItem("session_id");
+const [sessionId, setSessionId] = useState<string | null>(null);
 
+useEffect(() => {
+  const storedSessionId = localStorage.getItem("session_id");
+  setSessionId(storedSessionId);
+}, []);
 
 
   const [movie, setMovie] = useState<movieCardType | null>(null);

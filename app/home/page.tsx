@@ -1,11 +1,15 @@
 "use client";
 
 
-import React from "react";
+import React, {useState, useEffect} from "react";
 
 const Confirm = () => {
-  const token = localStorage.getItem("token");
+const [token, setToken] = useState<string | null>(null);
 
+useEffect(() => {
+  const storedTOken = localStorage.getItem("token");
+  setToken(storedTOken);
+}, []);
   return (
     <div className="min-h-screen flex justify-center items-center">
       <div className="max-w-md w-full border border-gray-300 rounded-xl p-5 flex flex-col gap-4">
