@@ -23,7 +23,12 @@ const Favorites = () => {
   const tabs = ["Favorite Movies", "Favorite TV Shows"];
   const [activeTab, setActiveTab] = useState("Favorite Movies");
 
-  const sessionId = localStorage.getItem("session_id");
+const [sessionId, setSessionId] = useState<string | null>(null);
+
+useEffect(() => {
+  const storedSessionId = localStorage.getItem("session_id");
+  setSessionId(storedSessionId);
+}, []);
 
   const { request } = useAxios();
 
