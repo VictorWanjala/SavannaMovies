@@ -1,18 +1,44 @@
 "use client";
 
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Users, Wallet } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { logout } = useAuth();
   const router = useRouter();
-  const sessionId = localStorage.getItem("session_id");
+
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  useEffect(() => {
+    const storedSessionId = localStorage.getItem("session_id");
+    setSessionId(storedSessionId);
+
+    const handleStorageChange = () => {
+      const updatedSessionId = localStorage.getItem("session_id");
+      setSessionId(updatedSessionId);
+    };
+    window.addEventListener("storage", handleStorageChange);
+    window.addEventListener("sessionchange", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("sessionchange", handleStorageChange);
+    };
+  }, []);
+
+  function handleLogout() {
+    logout();
+    localStorage.removeItem("session_id");
+    window.dispatchEvent(new Event("sessionchange"));
+    setSessionId(null);
+    router.push("/");
+  }
 
   const navItems = [
     { name: "HOME", href: "/" },
@@ -64,14 +90,7 @@ export function Navbar() {
                 transition={{ duration: 0.3, delay: 0.4 }}
               >
                 {sessionId ? (
-                  <Button
-                    onClick={() => {
-                      logout();
-                      router.push("/login");
-                      setIsOpen(false);
-                    }}
-                    className="rounded-full"
-                  >
+                  <Button onClick={handleLogout} className="rounded-full">
                     Sign Out
                   </Button>
                 ) : (

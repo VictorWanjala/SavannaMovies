@@ -30,6 +30,7 @@ const MovieDetails = () => {
     const response = await request({
       method: "GET",
       url: `movie/${id}`,
+      show_loading: false,
     });
 
 

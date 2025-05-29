@@ -1,14 +1,12 @@
+
 import axios from "axios";
-import { useContext } from "react";
-// import AppContext from "../app/RootContext";
+import React, { useState } from "react";
 import { toast } from "sonner";
 
 const baseUrl = "https://api.themoviedb.org/3/";
 const imageUrl = "https://image.tmdb.org/t/p/";
 
-
 const useAxios = () => {
-  // const { setLoading } = useContext(AppContext);
 
   const request = async (obj = {}) => {
     const {
@@ -25,63 +23,50 @@ const useAxios = () => {
       error_message = "An error occurred",
     } = obj;
 
+    let loadingToastId;
     try {
       if (!method || !url) {
         throw { custom: true, message: "Method and URL are required" };
       }
 
-      // if (show_loading) setLoading(true);
+      if (show_loading) {
+        loadingToastId = toast.loading("Loading...", {
+          description: "Please wait while we fetch the data.",
+        });
+      }
 
       const res = await axios({
         method,
-        url: `${baseUrl}/${url}`,
+        url: `${baseUrl}${url.startsWith("/") ? url : "/" + url}`,
         data: body,
         params,
         responseType,
         headers: {
           ...headers,
-          Authorization: `Bearer ${
-            process.env.NEXT_PUBLIC_ACCESS_TOKEN
-          }`,
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_ACCESS_TOKEN}`,
         },
       });
 
       if (show_success) {
-        toast.success("Success", {
-          description: (
-            <p className="text-gray-800">
-              {res?.data?.message || success_message}
-            </p>
-          ),
-          action: {},
-        });
+        toast.success(res?.data?.message || success_message);
       }
 
       return res.data;
     } catch (e) {
       if (show_error) {
-        toast.warning("Error", {
-          description: (
-            <p className="text-red-500">
-              {e?.response?.data?.message ||
-                error_message ||
-                "An error occurred"}
-            </p>
-          ),
-
-          action: {
-            label: "Try again",
-            onClick: () => {},
-          },
-        });
+        toast.error(
+          e?.response?.data?.message || error_message || "An error occurred"
+        );
       }
       return { error: true, message: e.message || "An error occurred" };
     } finally {
-      // if (show_loading) setLoading(false);
+      if (show_loading && loadingToastId) {
+        toast.dismiss(loadingToastId);
+      }
     }
   };
 
-  return { request, imageUrl, baseUrl };
+  return { request, imageUrl, baseUrl  };
 };
 
 export default useAxios;

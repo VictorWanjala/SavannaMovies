@@ -11,6 +11,8 @@ const useAuth = () => {
 
   useEffect(() => {
     let storedUser = Cookies.get("user") || localStorage.getItem("user");
+    let storedSessionId = Cookies.get("session_id") || localStorage.getItem("session_id");
+    let storedToken = Cookies.get("token") || localStorage.getItem("token");
 
     if (storedUser) {
       try {
@@ -22,13 +24,18 @@ const useAuth = () => {
         localStorage.removeItem("user");
       }
     }
+    if (storedSessionId) {
+      setSessionId(storedSessionId);
+    }
+    if (storedToken) {
+      setToken(storedToken);
+    }
   }, []);
 
   const saveUser = (userData: UserType, tokenData: string) => {
     setUser(userData);
     setToken(tokenData);
 
-    // Store in Cookies
     Cookies.set("user", JSON.stringify(userData || {}), { expires: 7 });
     Cookies.set("token", tokenData, {
       expires: 7,
@@ -36,7 +43,6 @@ const useAuth = () => {
       sameSite: "strict",
     });
 
-    // Store in localStorage as a backup
     localStorage.setItem("user", JSON.stringify(userData || {}));
     localStorage.setItem("token", tokenData);
   };
@@ -49,11 +55,16 @@ const useAuth = () => {
 
   const logout = () => {
     setUser(null);
+    setSessionId(null);
+    setToken(null);
+
     Cookies.remove("user");
     Cookies.remove("token");
+    Cookies.remove("session_id");
 
     localStorage.removeItem("user");
     localStorage.removeItem("token");
+    localStorage.removeItem("session_id");
   };
 
   return {

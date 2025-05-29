@@ -33,12 +33,11 @@ const Home = () => {
 
    
     if(res?.error) {
-      console.error("Error creating session:", res.error);
       return;
     }
 
     localStorage.setItem("session_id", res?.session_id || "");
-    saveSessionId(res?.session_id);
+    // saveSessionId(res?.session_id);
   }
 
   return (

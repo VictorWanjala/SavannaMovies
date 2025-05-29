@@ -5,19 +5,23 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import useAxios from "@/hooks/useAxios";
 import axios from "axios";
 import useAuth from "@/hooks/useAuth";
 import { UserType } from "../types/UserTypes";
+import { toast } from "sonner";
 
 export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { request } = useAxios();
   const { saveUser } = useAuth();
 
   const handleSubmit = async () => {
+    setLoading(true);
+    toast.loading("Logging in...");
+
+    {loading && toast.loading("Logging in...")}
     try {
       const response = await axios({
         method: "POST",
@@ -28,17 +32,30 @@ export default function Home() {
         },
       });
 
+      
       if (response?.statusText !== "OK") {
         console.error("Login failed:", response?.data);
+        toast.error("Login failed. Please check your credentials.");
+        setLoading(false);
         return;
-      }
+      } 
+
+      toast.success("Login successful!");
+
+      
 
       const { token, user }: { token: string; user: UserType } = response.data;
 
       saveUser(user, token);
+      localStorage.setItem("session_id", token);
+      window.dispatchEvent(new Event("sessionchange"));
     } catch (error) {
       console.error("Error during login:", error);
+      toast.error("An error occurred during login. Please try again.");
+      setLoading(false);
       return;
+    }finally{
+      setLoading(false);
     }
 
     router.push("/home");
@@ -47,11 +64,11 @@ export default function Home() {
   return (
     <div
       className="min-h-screen flex justify-center items-center bg-no-repeat "
-      style={{
-        backgroundImage: "url('/background.jpg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
+      // style={{
+      //   backgroundImage: "url('/background.jpg')",
+      //   backgroundSize: "cover",
+      //   backgroundPosition: "center",
+      // }}
     >
       <div className="border border-gray-300 rounded-2xl p-5 bg-white flex flex-col gap-4 w-1/4 max-md:w-full max-md:mx-2">
         <h3 className="text-center">Login</h3>
@@ -60,12 +77,13 @@ export default function Home() {
           <Input value={email} onChange={(e) => setEmail(e.target.value)} />
           <Label>Password</Label>
           <Input
+          type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <Button className="rounded" onClick={handleSubmit}>
-          Login
+        <Button className="rounded" onClick={handleSubmit} disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
         </Button>
       </div>
     </div>
