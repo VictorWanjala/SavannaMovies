@@ -62,6 +62,7 @@ const Favorites = () => {
     });
 
 
+    console.log(totalResults, totalTVResults)
 
     if (!response?.error) {
       setFavoriteTvShows(response.results || []);

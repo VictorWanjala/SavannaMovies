@@ -4,7 +4,6 @@ import React, { useEffect } from 'react'
 import HeroSection from '@/components/homePage/Hero'
 import UpcomingMovies from '@/components/homePage/UpcomingMovies'
 import Trending from '@/components/homePage/TrendingMovies'
-import useAuth from '@/hooks/useAuth';
 import useAxios from '@/hooks/useAxios';
 
 const Home = () => {
