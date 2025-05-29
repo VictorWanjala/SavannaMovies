@@ -26,7 +26,8 @@ const HeroSection: FC = () => {
     }
 
     const trailer = response.results.find(
-      (video: any) => video.type === "Trailer" && video.site === "YouTube"
+      (video: { type: string; site: string; key?: string }) =>
+        video.type === "Trailer" && video.site === "YouTube"
     );
 
     if (trailer?.key) {
