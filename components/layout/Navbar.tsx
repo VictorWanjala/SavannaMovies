@@ -1,13 +1,12 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Users, Wallet } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);

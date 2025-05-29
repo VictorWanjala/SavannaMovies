@@ -4,7 +4,7 @@ import RelatedMovies from "@/components/moviePage/RelatedMovies";
 import { Button } from "@/components/ui/button";
 import useAxios from "@/hooks/useAxios";
 import { getImageUrl } from "@/lib/getImageUrl";
-import { ArrowLeft, Calendar, Clock, Star } from "lucide-react";
+import { ArrowLeft, Calendar,  Star } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { movieCardType } from "@/app/types/movieCardTypes";
@@ -23,7 +23,7 @@ const MovieDetails = () => {
 
   useEffect(() => {
     fetchMovieDetails();
-  }, []);
+  }, [id]);
 
   async function fetchMovieDetails() {
     if (!id) return;
@@ -43,7 +43,7 @@ const MovieDetails = () => {
 
   async function addFavorite () {
     if (!sessionId) return;
-    let res = await request({
+    const res = await request({
       method: "POST",
       url: `account/${21681798}/favorite`,
       body: {
@@ -57,6 +57,7 @@ const MovieDetails = () => {
       show_success: true,
       success_message: "Added to favorites",
     })
+    if(res?.error) return
   }
  
 

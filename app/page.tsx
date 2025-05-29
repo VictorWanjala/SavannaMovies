@@ -9,7 +9,7 @@ import useAxios from '@/hooks/useAxios';
 
 const Home = () => {
 
-  const { saveSessionId} = useAuth()
+  // const { saveSessionId} = useAuth()
   const {request} = useAxios()
 
   const token = localStorage.getItem("token")
@@ -19,11 +19,11 @@ const Home = () => {
   useEffect(() => {
     if(!token) return;
     createSession()
-  } ,[])
+  } ,[token])
 
 
   const createSession = async () => {
-    let res = await request({
+    const res = await request({
       method: "POST",
       url: "authentication/session/new",
       body: {

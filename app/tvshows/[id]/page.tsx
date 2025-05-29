@@ -1,12 +1,11 @@
 "use client";
 
 import { tvShowCardType } from "@/app/types/movieCardTypes";
-import RelatedMovies from "@/components/moviePage/RelatedMovies";
 import RelatedTVshows from "@/components/tvPage/RelatedTv";
 import { Button } from "@/components/ui/button";
 import useAxios from "@/hooks/useAxios";
 import { getImageUrl } from "@/lib/getImageUrl";
-import { ArrowLeft, Calendar, Clock, Star } from "lucide-react";
+import { ArrowLeft, Calendar,  Star } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -22,7 +21,7 @@ const TvShowDetails = () => {
 
   useEffect(() => {
     fetchMovieDetails();
-  }, []);
+  }, [id]);
 
   async function fetchMovieDetails() {
     if (!id) return;
@@ -39,7 +38,7 @@ const TvShowDetails = () => {
 
   async function addFavorite() {
     if (!sessionId) return;
-    let res = await request({
+    const res = await request({
       method: "POST",
       url: `account/${21681798}/favorite`,
       body: {
@@ -53,6 +52,9 @@ const TvShowDetails = () => {
       show_success: true,
       success_message: "Added to favorites",
     });
+    if (res.error) {
+      return;
+    }
   }
 
   const imageUrl = getImageUrl({ path: movie?.poster_path });

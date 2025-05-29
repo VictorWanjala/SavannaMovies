@@ -1,4 +1,20 @@
-export function convertBigIntToString(obj: any): any {
+type JSONValue =
+  | string
+  | number
+  | boolean
+  | null
+  | Date
+  | bigint
+  | JSONObject
+  | JSONArray;
+
+interface JSONObject {
+  [key: string]: JSONValue;
+}
+
+interface JSONArray extends Array<JSONValue> {}
+
+export function convertBigIntToString<T extends JSONValue>(obj: T): T | string | JSONObject | JSONArray {
   if (obj === null || obj === undefined) return obj;
 
   if (typeof obj === "bigint") {
@@ -13,12 +29,11 @@ export function convertBigIntToString(obj: any): any {
     if (Array.isArray(obj)) {
       return obj.map(convertBigIntToString);
     }
-    const result: Record<string, any> = {};
-    for (const key in obj) {
-      if (key === "password") {
-        continue; 
-      }
-      result[key] = convertBigIntToString(obj[key]);
+
+    const result: JSONObject = {};
+    for (const key in obj as JSONObject) {
+      if (key === "password") continue;
+      result[key] = convertBigIntToString((obj as JSONObject)[key]);
     }
     return result;
   }

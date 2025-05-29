@@ -1,6 +1,5 @@
 
 import axios from "axios";
-import React, { useState } from "react";
 import { toast } from "sonner";
 
 const baseUrl = "https://api.themoviedb.org/3/";

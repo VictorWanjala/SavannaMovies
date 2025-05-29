@@ -4,46 +4,43 @@ import useAxios from "@/hooks/useAxios";
 import React, { useState, useEffect } from "react";
 
 
-type SearchProps = {
+type SearchProps<T> = {
   searchUrl: string;
   placeholder?: string;
-  onResults?: (results: any[]) => void;
+  onResults?: (results: T[]) => void;
   debounceMs?: number;
 };
 
-const Search: React.FC<SearchProps> = ({
+const Search = <T,>({
   searchUrl,
   placeholder = "Search...",
   onResults,
   debounceMs = 400,
-}) => {
+}: SearchProps<T>) => {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<any[]>([]);
-  const {baseUrl, request} = useAxios()
+  const { request } = useAxios();
 
   useEffect(() => {
     if (!query.trim()) {
-      setResults([]);
-      onResults && onResults([]);
+      if (onResults) onResults([]);
       return;
     }
 
     const handler = setTimeout(async () => {
-      
-        const response = await request({
-          method: "GET",
-          url: searchUrl,
-          params: { query },
-        });
-        if (response.error) return;
-        const data = response;
-        setResults(data.results || []);
-        onResults && onResults(data.results || []);
-    
+      const response = await request({
+        method: "GET",
+        url: searchUrl,
+        params: { query },
+      });
+
+      if (response?.error) return;
+
+      const data = response;
+      if (onResults) onResults(data.results || []);
     }, debounceMs);
 
     return () => clearTimeout(handler);
-  }, [query, searchUrl]);
+  }, [query, searchUrl, debounceMs, onResults, request]);
 
   return (
     <div className="flex flex-col items-center gap-2 max-md:w-full w-[730px]">
@@ -59,3 +56,4 @@ const Search: React.FC<SearchProps> = ({
 };
 
 export default Search;
+

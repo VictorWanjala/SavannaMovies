@@ -1,6 +1,6 @@
 import { tvShowCardType } from "@/app/types/movieCardTypes";
 import { getImageUrl } from "@/lib/getImageUrl";
-import { Clock, Star, Tv } from "lucide-react";
+import {  Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
