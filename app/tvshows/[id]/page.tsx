@@ -9,6 +9,7 @@ import { ArrowLeft, Calendar,  Star } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const TvShowDetails = () => {
   const router = useRouter();
@@ -41,7 +42,10 @@ useEffect(() => {
   }
 
   async function addFavorite() {
-    if (!sessionId) return;
+    if (!sessionId) {
+      toast.error("Please login to add to favorites");
+      return;
+    };
     const res = await request({
       method: "POST",
       url: `account/${21681798}/favorite`,
