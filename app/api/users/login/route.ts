@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "../../_utils/prisma";
 import bcrypt from "bcrypt";
 import axios from "axios";
-import { convertBigIntToString } from "../../_utils/converBigInt";
+import convertBigIntToString  from "../../_utils/converBigInt";
 
 export async function POST(request: Request) {
   try {
