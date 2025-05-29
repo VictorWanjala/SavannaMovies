@@ -29,6 +29,7 @@ const UpcomingMovies = () => {
       method: "GET",
       url: `movie/upcoming`,
       params: { page },
+      show_loading: false,
     });
 
     if (response && response.results) {
@@ -43,6 +44,7 @@ const UpcomingMovies = () => {
       method: "GET",
       url: `tv/airing_today`,
       params: { page },
+      show_loading: false,
     });
 
     if (response && response.results) {

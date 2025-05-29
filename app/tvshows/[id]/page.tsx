@@ -11,13 +11,12 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-
 const TvShowDetails = () => {
   const router = useRouter();
   const { id } = useParams();
   const { request } = useAxios();
 
- 
+  const sessionId = localStorage.getItem("session_id");
 
   const [movie, setMovie] = useState<tvShowCardType | null>(null);
 
@@ -32,15 +31,29 @@ const TvShowDetails = () => {
       url: `tv/${id}`,
     });
 
-
     if (response.error) {
       return;
     }
     setMovie(response);
   }
 
- 
-
+  async function addFavorite() {
+    if (!sessionId) return;
+    let res = await request({
+      method: "POST",
+      url: `account/${21681798}/favorite`,
+      body: {
+        media_type: "tv",
+        media_id: id,
+        favorite: true,
+      },
+      params: {
+        session_id: sessionId,
+      },
+      show_success: true,
+      success_message: "Added to favorites",
+    });
+  }
 
   const imageUrl = getImageUrl({ path: movie?.poster_path });
 
@@ -68,7 +81,7 @@ const TvShowDetails = () => {
         <div className="flex flex-col gap-4 w-1/2 max-md:w-full">
           <div className="flex justify-between items-center">
             <h3 className="text-2xl text-white">{movie?.name}</h3>
-            <Button className="rounded-full">Add To Favorite</Button>
+            <Button className="rounded-full" onClick={addFavorite}>Add To Favorite</Button>
           </div>
           <div className="flex gap-5 max-md:flex-wrap">
             <div className="flex gap-3 max-md:flex-wrap">
@@ -87,8 +100,6 @@ const TvShowDetails = () => {
                 <Calendar className="" size={16} />
                 <span className="text-sm">{movie?.first_air_date}</span>
               </p>
-
-         
 
               <p className="flex gap-1 text-white items-center">
                 <Star className="" size={16} />
@@ -116,9 +127,7 @@ const TvShowDetails = () => {
               <p className="text-left">
                 {movie?.production_companies?.map((company, i) => (
                   <span key={i}>
-                    {typeof company === "string"
-                      ? company
-                      : company?.name}
+                    {typeof company === "string" ? company : company?.name}
                     {i < (movie.production_companies?.length ?? 0) - 1 && ", "}
                   </span>
                 ))}

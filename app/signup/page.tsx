@@ -21,7 +21,7 @@ export default function Signup() {
     toast.loading("Creating account...");
 
     try {
-      const response = await axios.post("/api/users/register", {
+      const response = await axios.post("/api/users/sign-up", {
         name,
         username,
         email,
@@ -70,6 +70,14 @@ export default function Signup() {
         <Button className="rounded" onClick={handleSignup} disabled={loading}>
           {loading ? "Signing Up..." : "Sign Up"}
         </Button>
+        <div className="flex justify-center items-center my-1">
+          <span className="text-sm text-gray-500">
+            Already have an account?{" "}
+            <a href="/login" className="text-secondary hover:underline">
+              Login
+            </a>
+          </span>
+        </div>
       </div>
     </div>
   );

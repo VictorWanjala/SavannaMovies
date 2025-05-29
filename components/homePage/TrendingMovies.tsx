@@ -40,6 +40,8 @@ const Trending = () => {
       method: "GET",
       url: `trending/all/day`,
       params: { page },
+            show_loading:false
+
     });
 
     if (response && response.results) {

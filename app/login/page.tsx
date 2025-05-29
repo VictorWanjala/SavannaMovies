@@ -47,11 +47,12 @@ export default function Home() {
       const { token, user }: { token: string; user: UserType } = response.data;
 
       saveUser(user, token);
-      localStorage.setItem("session_id", token);
+      // localStorage.setItem("session_id", token);
       window.dispatchEvent(new Event("sessionchange"));
     } catch (error) {
       console.error("Error during login:", error);
       toast.error("An error occurred during login. Please try again.");
+      toast.dismiss()
       setLoading(false);
       return;
     }finally{
@@ -85,6 +86,14 @@ export default function Home() {
         <Button className="rounded" onClick={handleSubmit} disabled={loading}>
           {loading ? "Logging in..." : "Login"}
         </Button>
+        <div className="flex justify-center items-center my-1">
+          <span className="text-sm text-gray-500">
+            Don't have an account?{" "}
+            <a href="/signup" className="text-secondary hover:underline">
+              Sign Up
+            </a>
+          </span>
+          </div>
       </div>
     </div>
   );

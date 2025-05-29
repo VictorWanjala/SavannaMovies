@@ -18,12 +18,12 @@ const MovieCard: React.FC<MovieCardProps> = ({ card }) => {
       href={`/movies/${card.id}`}
       className="w-[350px] h-auto max-md:w-full text-white flex flex-col gap-4"
     >
-      <div className="w-full h-[400px]">
+      <div className="w-full h-[450px]">
         <Image
           src={imageUrl ?? ""}
           alt={card.title}
-          width={150}
-          height={200}
+          width={200}
+          height={400}
           className="w-full h-full object-cover"
         />
       </div>

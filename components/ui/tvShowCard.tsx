@@ -22,8 +22,8 @@ const TvShowCard: React.FC<TVshowCardProps> = ({ card }) => {
         <Image
           src={imageUrl ?? ""}
           alt={card.name}
-          width={150}
-          height={200}
+          width={200}
+          height={400}
           className="w-full h-full object-cover"
         />
       </div>
