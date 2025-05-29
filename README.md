@@ -20,6 +20,21 @@ SavannaMovies is a dynamic and responsive movie web application built using **Ne
 - **Styling**: Tailwind CSS 
 - **State Management**: React Context
 
+## Screenshots
+
+### Homepage
+![Homepage](./public/home.png)
+
+### Upcoming
+![Homepage](./public/upcoming.png)
+
+### Trending Section
+![Trending](./public/trending.png)
+
+### Favorites Page
+![Favorites](./public/favorites.png)
+
+
 
 
 ## Getting Started
