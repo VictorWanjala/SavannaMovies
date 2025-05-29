@@ -46,7 +46,7 @@ export default function Home() {
       const { token, user }: { token: string; user: UserType } = response.data;
 
       saveUser(user, token);
-      // localStorage.setItem("session_id", token);
+      localStorage.setItem("session_id", token);
       window.dispatchEvent(new Event("sessionchange"));
     } catch (error) {
       console.error("Error during login:", error);
