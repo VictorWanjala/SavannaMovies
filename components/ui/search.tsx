@@ -31,6 +31,7 @@ const Search = <T,>({
         method: "GET",
         url: searchUrl,
         params: { query },
+        show_loading: false,
       });
 
       if (response?.error) return;
