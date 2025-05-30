@@ -4,21 +4,22 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useContext, useState } from "react";
-import AppContext from "../context/UIContext";
+import UIContext from "../context/UIContext";
 
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import useAuth from "@/hooks/useAuth";
+import AuthContext from "../context/AuthContext";
 import { UserType } from "../types/UserTypes";
 import { toast } from "sonner";
 
 export default function Home() {
-  const context = useContext(AppContext);
+  const context = useContext(UIContext);
   const { loading, setLoading } = context ?? {};
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const { saveUser } = useAuth();
+  const auth = useContext(AuthContext);
+  const { saveUser } = auth ?? {};
 
   const handleSubmit = async () => {
     if (setLoading) setLoading(true);
@@ -38,12 +39,17 @@ export default function Home() {
 
       toast.success("Login successful!");
 
-      saveUser(user, token);
+      if (saveUser) {
+        saveUser(user, token);
+      }
       localStorage.setItem("session_id", token);
       window.dispatchEvent(new Event("sessionchange"));
       router.push("/home");
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || "Login error. Please check your credentials and try again.");
+      toast.error(
+        error?.response?.data?.message ||
+          "Login error. Please check your credentials and try again."
+      );
       // if (setLoading) setLoading(false);
       // return;
     } finally {
