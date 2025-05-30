@@ -3,23 +3,27 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import UIContext from "../context/UIContext";
+
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import useAuth from "@/hooks/useAuth";
+import AuthContext from "../context/AuthContext";
 import { UserType } from "../types/UserTypes";
 import { toast } from "sonner";
 
 export default function Home() {
+  const context = useContext(UIContext);
+  const { loading, setLoading } = context ?? {};
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { saveUser } = useAuth();
+  const auth = useContext(AuthContext);
+  const { saveUser } = auth ?? {};
 
   const handleSubmit = async () => {
-    setLoading(true);
-    toast.loading("Logging in...");
+    if (setLoading) setLoading(true);
+    const toastId = toast.loading("Logging in...");
 
     try {
       const response = await axios({
@@ -31,35 +35,27 @@ export default function Home() {
         },
       });
 
-      
-      if (response?.statusText !== "OK") {
-        console.error("Login failed:", response?.data);
-        toast.error("Login failed. Please check your credentials.");
-        setLoading(false);
-        return;
-      } 
+      const { token, user }: { token: string; user: UserType } = response.data;
 
       toast.success("Login successful!");
 
-      
-
-      const { token, user }: { token: string; user: UserType } = response.data;
-
-      saveUser(user, token);
+      if (saveUser) {
+        saveUser(user, token);
+      }
       localStorage.setItem("session_id", token);
       window.dispatchEvent(new Event("sessionchange"));
-    } catch (error) {
-      console.error("Error during login:", error);
-      toast.error("An error occurred during login. Please try again.");
-      toast.dismiss()
-      setLoading(false);
-      return;
-    }finally{
-      toast.dismiss()
-      setLoading(false);
+      router.push("/home");
+    } catch (error: any) {
+      toast.error(
+        error?.response?.data?.message ||
+          "Login error. Please check your credentials and try again."
+      );
+      // if (setLoading) setLoading(false);
+      // return;
+    } finally {
+      toast.dismiss(toastId);
+      if (setLoading) setLoading(false);
     }
-
-    router.push("/home");
   };
 
   return (
@@ -78,7 +74,7 @@ export default function Home() {
           <Input value={email} onChange={(e) => setEmail(e.target.value)} />
           <Label>Password</Label>
           <Input
-          type="password"
+            type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -93,7 +89,7 @@ export default function Home() {
               Sign Up
             </a>
           </span>
-          </div>
+        </div>
       </div>
     </div>
   );

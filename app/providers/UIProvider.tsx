@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import AppContext from "../app/RootContext";
+import AppContext from "../context/UIContext";
 
-const Provider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [loading, setLoading] = useState(false);
   return (
     <AppContext.Provider value={{ loading, setLoading }}>
@@ -13,4 +13,4 @@ const Provider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   );
 };
 
-export default Provider;
+export default UIProvider;
