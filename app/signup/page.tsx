@@ -7,8 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useState, useContext } from "react";
 import UIContext from "../context/UIContext";
 import { useRouter } from "next/navigation";
-import { UserType } from "../types/UserTypes";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 
 export default function Signup() {
@@ -26,21 +25,20 @@ export default function Signup() {
     const toastId = toast.loading("Creating account...");
 
     try {
-      const response = await axios.post("/api/users/sign-up", {
+      await axios.post("/api/users/sign-up", {
         name,
         username,
         email,
         password,
       });
 
-      const { token, user }: { token: string; user: UserType } = response.data;
 
       toast.success("Account created successfully!");
       router.push("/login");
-    } catch (error: any) {
-      console.error("Signup error:", error);
+    } catch (error: unknown) {
+      const err = error as AxiosError<{ message: string }>;
       toast.error(
-        error?.response?.data?.message || "An error occurred during signup."
+        err?.response?.data?.message || "An error occurred during signup."
       );
     } finally {
       toast.dismiss(toastId);
