@@ -26,13 +26,12 @@ export default function Signup() {
     const toastId = toast.loading("Creating account...");
 
     try {
-      const response = await axios.post("/api/users/sign-up", {
+      await axios.post("/api/users/sign-up", {
         name,
         username,
         email,
         password,
       });
-      const { user }: { user: UserType } = response.data;
 
 
       toast.success("Account created successfully!");
