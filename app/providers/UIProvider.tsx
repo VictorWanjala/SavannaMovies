@@ -5,7 +5,7 @@ import AppContext from "../context/UIContext";
 
 const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [loading, setLoading] = useState(false);
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<unknown[]>([]);
   return (
     <AppContext.Provider value={{ loading, setLoading,searchResults, setSearchResults }}>
       <main>{children}</main>
