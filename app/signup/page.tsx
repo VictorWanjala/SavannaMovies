@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useState, useContext } from "react";
 import UIContext from "../context/UIContext";
 import { useRouter } from "next/navigation";
+import { UserType } from "../types/UserTypes";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 
@@ -31,6 +32,7 @@ export default function Signup() {
         email,
         password,
       });
+      const { user }: { user: UserType } = response.data;
 
 
       toast.success("Account created successfully!");
