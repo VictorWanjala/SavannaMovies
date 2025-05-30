@@ -5,9 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useContext, useState } from "react";
 import UIContext from "../context/UIContext";
+import axios, { AxiosError } from "axios";
 
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import AuthContext from "../context/AuthContext";
 import { UserType } from "../types/UserTypes";
 import { toast } from "sonner";
@@ -45,9 +45,11 @@ export default function Home() {
       localStorage.setItem("session_id", token);
       window.dispatchEvent(new Event("sessionchange"));
       router.push("/home");
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as AxiosError<{ message: string }>;
+
       toast.error(
-        error?.response?.data?.message ||
+        err?.response?.data?.message ||
           "Login error. Please check your credentials and try again."
       );
       // if (setLoading) setLoading(false);
