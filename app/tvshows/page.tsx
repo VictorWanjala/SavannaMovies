@@ -70,7 +70,7 @@ const TvShows = () => {
 
       <div className="flex flex-wrap gap-6 mt-6">
         {(searchResults ?? []).map((movie, i) => (
-          <TvShowCard key={i} card={movie} />
+          <TvShowCard key={i} card={movie as tvShowCardType} />
         ))}
       </div>
       <div className="my-12 ">

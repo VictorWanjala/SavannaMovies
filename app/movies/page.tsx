@@ -72,7 +72,7 @@ const Movies = () => {
 
       <div className="flex flex-wrap gap-6 mt-6">
         {(searchResults ?? []).map((movie, i) => (
-          <MovieCard key={i} card={movie} />
+          <MovieCard key={i} card={movie as movieCardType} />
         ))}
       </div>
       <Pagination
