@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { useState, useContext } from "react";
 import UIContext from "../context/UIContext";
 import { useRouter } from "next/navigation";
-import { UserType } from "../types/UserTypes";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 
