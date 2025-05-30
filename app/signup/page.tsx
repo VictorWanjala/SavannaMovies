@@ -5,8 +5,10 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import AppContext from "../context/UIContext";
 import { useRouter } from "next/navigation";
+import { UserType } from "../types/UserTypes";
 import axios from "axios";
 import { toast } from "sonner";
 
@@ -15,12 +17,14 @@ export default function Signup() {
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [loading, setLoading] = useState(false);
+  const context = useContext(AppContext);
+
+  const { loading, setLoading } = context ?? {};
   const router = useRouter();
 
   const handleSignup = async () => {
-    setLoading(true);
-    toast.loading("Creating account...");
+    if (setLoading) setLoading(true);
+    const toastId = toast.loading("Creating account...");
 
     try {
       const response = await axios.post("/api/users/sign-up", {
@@ -30,11 +34,7 @@ export default function Signup() {
         password,
       });
 
-      if (response?.statusText !== "OK") {
-        toast.error("Signup failed. Please check your inputs.");
-        setLoading(false);
-        return;
-      }
+      const { token, user }: { token: string; user: UserType } = response.data;
 
       toast.success("Account created successfully!");
       router.push("/login");
@@ -44,7 +44,8 @@ export default function Signup() {
         error?.response?.data?.message || "An error occurred during signup."
       );
     } finally {
-      setLoading(false);
+      toast.dismiss(toastId);
+      if (setLoading) setLoading(false);
     }
   };
 
@@ -57,7 +58,10 @@ export default function Signup() {
           <Input value={name} onChange={(e) => setName(e.target.value)} />
 
           <Label>Username</Label>
-          <Input value={username} onChange={(e) => setUsername(e.target.value)} />
+          <Input
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
 
           <Label>Email</Label>
           <Input value={email} onChange={(e) => setEmail(e.target.value)} />

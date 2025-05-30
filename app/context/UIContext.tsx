@@ -8,7 +8,7 @@ export type RootContextType = {
   setLoading: (open: boolean) => void;
 };
 
-const RootContext = createContext<RootContextType | undefined>(undefined);
+const UIContext = createContext<RootContextType | undefined>(undefined);
 
 
-export default RootContext;
+export default UIContext;
