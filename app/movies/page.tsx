@@ -1,25 +1,28 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import MovieCard from "../../components/ui/movieCard";
 import Search from "../../components/ui/search";
+import UIContext from "../context/UIContext";
 import useAxios from "../../hooks/useAxios";
 import Pagination from "../../components/ui/pagination";
 import { movieCardType } from "../types/movieCardTypes";
 
 const Movies = () => {
-  const [filteredMovies, setFilteredMovies] = useState<movieCardType[]>([]);
   const [originalMovies, setOriginalMovies] = useState<movieCardType[]>([]);
-
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
 
   const { request } = useAxios();
+  const context = useContext(UIContext);
+  const {searchResults, setSearchResults} = context ?? {}
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchMovies();
+    if (searchResults && setSearchResults) {
+      setSearchResults([]);
+    }
   }, [page]);
 
   async function fetchMovies() {
@@ -29,7 +32,6 @@ const Movies = () => {
       params: { page },
     });
     if (response) {
-      setFilteredMovies(response.results || []);
       setOriginalMovies(response.results || []);
       setTotalPages(response.total_pages || 1);
       setTotalResults(response.total_results || 0);
@@ -57,16 +59,20 @@ const Movies = () => {
           <Search<movieCardType>
             searchUrl="search/movie"
             placeholder="Search movies..."
-            onResults={(results) =>
-              setFilteredMovies(results.length ? results : originalMovies)
+            onResults={(results) =>{
+              if (searchResults && setSearchResults) {
+                setSearchResults((results.length ? results : originalMovies));
+              }
+            }
+              
             }
           />
         </div>
       </div>
 
       <div className="flex flex-wrap gap-6 mt-6">
-        {filteredMovies.map((movie, i) => (
-          <MovieCard key={i} card={movie} />
+        {(searchResults ?? []).map((movie, i) => (
+          <MovieCard key={i} card={movie as movieCardType} />
         ))}
       </div>
       <Pagination
