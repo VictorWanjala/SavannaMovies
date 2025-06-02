@@ -29,6 +29,7 @@
     "sonner": "^2.0.3",
     "swiper": "^11.2.8",
     "tailwind-merge": "^3.3.0",
+    "tailwind-scrollbar-hide": "^4.0.0",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
