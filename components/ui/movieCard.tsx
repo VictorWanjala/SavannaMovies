@@ -31,16 +31,16 @@ const MovieCard: React.FC<MovieCardProps> = ({ card }) => {
       <div className="flex flex-col gap-2">
         <div className="flex justify-between items-center">
           <p className="text-white">{card?.title}</p>
-          <p className="text-primary">{card?.release_date}</p>
+          <p className="text-primary">{card?.release_date?.split("-")[0]}</p>
         </div>
         <div className="flex justify-between">
-          <p className="border border-white py-1 px-2">{card?.original_language}</p>
+          <p className="border border-white py-1 px-2">{card?.original_language?.toUpperCase()}</p>
           <div className="flex gap-4">
            
             <p className="flex items-center gap-1">
               {" "}
               <Star className="text-primary text-xs" size={16} />
-              <span className="">{card?.vote_average}</span>
+              <span className="">{card?.vote_average?.toFixed(1)}</span>
             </p>
           </div>
         </div>

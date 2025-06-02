@@ -23,12 +23,12 @@ const Favorites = () => {
   const tabs = ["Favorite Movies", "Favorite TV Shows"];
   const [activeTab, setActiveTab] = useState("Favorite Movies");
 
-const [sessionId, setSessionId] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
 
-useEffect(() => {
-  const storedSessionId = localStorage.getItem("session_id");
-  setSessionId(storedSessionId);
-}, []);
+  useEffect(() => {
+    const storedSessionId = localStorage.getItem("session_id");
+    setSessionId(storedSessionId);
+  }, []);
 
   const { request } = useAxios();
 
@@ -66,8 +66,7 @@ useEffect(() => {
       },
     });
 
-
-    console.log(totalResults, totalTVResults)
+    console.log(totalResults, totalTVResults);
 
     if (!response?.error) {
       setFavoriteTvShows(response.results || []);
@@ -104,21 +103,23 @@ useEffect(() => {
     <div className="container mx-auto px-4 py-28 max-md:py-10">
       <div className="flex items-center justify-between max-md:flex-col">
         <h2 className="text-3xl font-bold mb-4 text-secondary">{activeTab}</h2>
-        <div className="flex gap-4 pr-7">
-          {tabs?.map((tab, i) => (
-            <button
-              key={i}
-              onClick={() => handleTabChange(tab)}
-              className={`rounded-full text-white px-4 py-2 ${
-                activeTab === tab
-                  ? "bg-secondary"
-                  : "bg-none border border-secondary"
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
+        {sessionId && (
+          <div className="flex gap-4 pr-7">
+            {tabs?.map((tab, i) => (
+              <button
+                key={i}
+                onClick={() => handleTabChange(tab)}
+                className={`rounded-full text-white px-4 py-2 ${
+                  activeTab === tab
+                    ? "bg-secondary"
+                    : "bg-none border border-secondary"
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {sessionId ? (
