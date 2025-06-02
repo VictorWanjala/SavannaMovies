@@ -56,7 +56,7 @@ const Trending = () => {
       <div className="relative">
         <div
           ref={scrollRef}
-          className="flex gap-4 overflow-x-auto scroll-hide snap-x snap-mandatory px-1"
+          className="flex gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory px-1"
         >
           {movies.map((movie, i) => (
             <div
