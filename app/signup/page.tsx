@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -15,6 +14,8 @@ export default function Signup() {
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const context = useContext(UIContext);
 
   const { loading, setLoading } = context ?? {};
@@ -30,8 +31,8 @@ export default function Signup() {
         username,
         email,
         password,
+        confirmPassword
       });
-
 
       toast.success("Account created successfully!");
       router.push("/login");
@@ -47,39 +48,103 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-no-repeat">
-      <div className="border border-gray-300 rounded-2xl p-5 bg-white flex flex-col gap-4 w-1/4 max-md:w-full max-md:mx-2">
-        <h3 className="text-center">Sign Up</h3>
-        <div className="flex flex-col gap-2">
-          <Label>Name</Label>
-          <Input value={name} onChange={(e) => setName(e.target.value)} />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 to-white px-4">
+      <div className="w-full max-w-md p-8 rounded-2xl shadow-lg bg-white border border-gray-200">
+        <h2 className="text-2xl font-semibold text-center text-secondary mb-6">
+          Create an Account
+        </h2>
 
-          <Label>Username</Label>
-          <Input
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
+        <div className="space-y-4">
+          <div>
+            <Label htmlFor="name">Name</Label>
+            <Input
+              id="name"
+              type="text"
+              value={name}
+              placeholder="Enter your name"
+              onChange={(e) => setName(e.target.value)}
+              disabled={loading}
+              className="text-gray-500"
+            />
+          </div>
 
-          <Label>Email</Label>
-          <Input value={email} onChange={(e) => setEmail(e.target.value)} />
+          <div>
+            <Label htmlFor="username">Username</Label>
+            <Input
+              id="username"
+              type="text"
+              value={username}
+              placeholder="Enter your username"
+              onChange={(e) => setUsername(e.target.value)}
+              disabled={loading}
+              className="text-gray-500"
+            />
+          </div>
 
-          <Label>Password</Label>
-          <Input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <Button className="rounded" onClick={handleSignup} disabled={loading}>
-          {loading ? "Signing Up..." : "Sign Up"}
-        </Button>
-        <div className="flex justify-center items-center my-1">
-          <span className="text-sm text-gray-500">
+          <div>
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              placeholder="Enter your email"
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
+              className="text-gray-500"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="password">Password</Label>
+            <div className="relative text-gray-500">
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                placeholder="Enter your password"
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={loading}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-2 flex items-center text-xs text-gray-500 hover:text-secondary"
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
+            </div>
+          </div>
+           <div>
+            <Label htmlFor="confirmPassword">Confirm Password</Label>
+            <div className="relative text-gray-500">
+              <Input
+                id="confirmPassword"
+                type={showPassword ? "text" : "password"}
+                value={confirmPassword}
+                placeholder="Confirm your password"
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                disabled={loading}
+              />
+            </div>
+          </div>
+
+          <Button
+            className="w-full"
+            onClick={handleSignup}
+            disabled={loading || !name || !username || !email || !password || !confirmPassword}
+          >
+            {loading ? "Signing Up..." : "Sign Up"}
+          </Button>
+
+          <p className="text-sm text-center text-gray-500">
             Already have an account?{" "}
-            <a href="/login" className="text-secondary hover:underline">
+            <a
+              href="/login"
+              className="text-secondary hover:underline font-medium"
+            >
               Login
             </a>
-          </span>
+          </p>
         </div>
       </div>
     </div>

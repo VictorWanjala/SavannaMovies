@@ -5,12 +5,21 @@ import bcrypt from "bcrypt";
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email, name, username, password } = body;
+    const { email, name, username, password, confirmPassword } = body;
 
-    if (!email || !password || !name || !username) {
+    if (!email || !password || !name || !username || !confirmPassword) {
       return NextResponse.json(
         {
           message: "Required fields are missing",
+        },
+        { status: 400 }
+      );
+    }
+
+    if (password !== confirmPassword) {
+      return NextResponse.json(
+        {
+          message: "Passwords do not match",
         },
         { status: 400 }
       );

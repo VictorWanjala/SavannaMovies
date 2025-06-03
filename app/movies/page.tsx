@@ -13,10 +13,11 @@ const Movies = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const { request } = useAxios();
   const context = useContext(UIContext);
-  const {searchResults, setSearchResults} = context ?? {}
+  const { searchResults, setSearchResults } = context ?? {};
 
   useEffect(() => {
     fetchMovies();
@@ -26,6 +27,7 @@ const Movies = () => {
   }, [page]);
 
   async function fetchMovies() {
+    setLoading(true);
     const response = await request({
       method: "GET",
       url: `movie/popular`,
@@ -36,6 +38,7 @@ const Movies = () => {
       setTotalPages(response.total_pages || 1);
       setTotalResults(response.total_results || 0);
     }
+    setLoading(false);
   }
 
   console.log("Total Results:", totalResults);
@@ -50,6 +53,7 @@ const Movies = () => {
       setPage(page - 1);
     }
   };
+  const moviesToShow = searchResults && searchResults.length ? searchResults : originalMovies;
 
   return (
     <div className="container mx-auto px-4 py-28 max-md:py-10">
@@ -59,21 +63,23 @@ const Movies = () => {
           <Search<movieCardType>
             searchUrl="search/movie"
             placeholder="Search movies..."
-            onResults={(results) =>{
+            onResults={(results) => {
               if (searchResults && setSearchResults) {
-                setSearchResults((results.length ? results : originalMovies));
+                setSearchResults(results.length ? results : originalMovies);
               }
-            }
-              
-            }
+            }}
           />
         </div>
       </div>
 
       <div className="flex flex-wrap gap-6 mt-6">
-        {(searchResults ?? []).map((movie, i) => (
-          <MovieCard key={i} card={movie as movieCardType} />
-        ))}
+        {loading
+          ? Array.from({ length: 6 }).map((_, i) => (
+              <MovieCard key={i} loading />
+            ))
+          : moviesToShow.map((movie, i) => (
+              <MovieCard key={i} card={movie as movieCardType} />
+            ))}
       </div>
       <Pagination
         currentPage={page}
