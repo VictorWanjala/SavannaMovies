@@ -12,6 +12,8 @@ const TvShows = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
+  const [loading, setLoading] = useState(false);
+
   const [originalMovies, setOriginalMovies] = useState<tvShowCardType[]>([]);
 
   const { request } = useAxios();
@@ -19,6 +21,8 @@ const TvShows = () => {
   const { searchResults, setSearchResults } = context ?? {};
 
   useEffect(() => {
+    setLoading(true);
+
     fetchTvShows();
     if (searchResults && setSearchResults) {
       setSearchResults([]);
@@ -36,9 +40,10 @@ const TvShows = () => {
       setTotalPages(response.total_pages || 1);
       setTotalResults(response.total_results || 0);
     }
+    setLoading(false);
   }
 
-  console.log(totalResults)
+  console.log(totalResults);
 
   const handleNextPage = () => {
     if (page < totalPages) {
@@ -51,6 +56,9 @@ const TvShows = () => {
     }
   };
 
+  const showsToDisplay = searchResults && searchResults.length ? searchResults : originalMovies;
+
+
   return (
     <div className="container mx-auto px-4 py-28 max-md:py-10">
       <div className="flex items-center justify-between max-md:flex-col">
@@ -59,19 +67,23 @@ const TvShows = () => {
           <Search<tvShowCardType>
             searchUrl="search/tv"
             placeholder="Search TV Shows..."
-            onResults={(results) =>{if (searchResults && setSearchResults) {
-              setSearchResults(results.length ? results : originalMovies);
-
+            onResults={(results) => {
+              if (searchResults && setSearchResults) {
+                setSearchResults(results.length ? results : originalMovies);
+              }
             }}
-            }
           />
         </div>
       </div>
 
       <div className="flex flex-wrap gap-6 mt-6">
-        {(searchResults ?? []).map((movie, i) => (
-          <TvShowCard key={i} card={movie as tvShowCardType} />
-        ))}
+        {loading
+          ? Array.from({ length: 6 }).map((_, i) => (
+              <TvShowCard key={i} loading /> 
+            ))
+          : showsToDisplay.map((show, i) => (
+              <TvShowCard key={i} card={show as tvShowCardType} />
+            ))}
       </div>
       <div className="my-12 ">
         <Pagination

@@ -10,6 +10,10 @@ import { tvShowCardType } from "@/app/types/movieCardTypes";
 const UpcomingMovies = () => {
   const { request } = useAxios();
   const [movies, setMovies] = useState([]);
+  const [loadingShows, setLoadingShows] = useState(false);
+
+  const [loadingMovies, setLoadingMovies] = useState(false);
+
   const [shows, setShows] = useState<tvShowCardType[]>([]);
   const [page, setPage] = useState(1);
   const [tvPage, setTvPage] = useState(1);
@@ -26,10 +30,11 @@ const UpcomingMovies = () => {
   }, [page]);
 
   async function fetchUpcomingMovies() {
+    setLoadingMovies(true);
     const response = await request({
       method: "GET",
       url: `movie/upcoming`,
-      params: { page },
+      params: { page, tvPage, activeTab },
       show_loading: false,
     });
 
@@ -38,9 +43,11 @@ const UpcomingMovies = () => {
       setTotalPages(response.total_pages || 1);
       setTotalResults(response.total_results || 0);
     }
+    setLoadingMovies(false);
   }
 
   async function fetchTVMovies() {
+    setLoadingMovies(true);
     const response = await request({
       method: "GET",
       url: `tv/airing_today`,
@@ -53,11 +60,11 @@ const UpcomingMovies = () => {
       setTotalTVPages(response.total_pages || 1);
       setTotalTVResults(response.total_results || 0);
     }
+      setLoadingShows(false);
   }
 
-
-  console.log(totalResults)
-  console.log(totalTVResults)
+  console.log(totalResults);
+  console.log(totalTVResults);
 
   const handleNextPage = () => {
     if (page < totalPages) {
@@ -110,15 +117,19 @@ const UpcomingMovies = () => {
 
       {activeTab === "Movies" ? (
         <div className="flex flex-wrap gap-6 mt-8">
-          {movies.map((movie, i) => (
-            <MovieCard key={i} card={movie} />
-          ))}
+          {loadingMovies
+            ? Array.from({ length: 6 }).map((_, i) => (
+                <MovieCard key={i} loading />
+              ))
+            : movies.map((movie, i) => <MovieCard key={i} card={movie} />)}
         </div>
       ) : (
         <div className="flex flex-wrap gap-6 mt-8">
-          {shows.map((show, i) => (
-            <TvShowCard key={i} card={show} />
-          ))}
+          {loadingShows
+            ? Array.from({ length: 6 }).map((_, i) => (
+                <TvShowCard key={i} loading />
+              ))
+            : shows.map((show, i) => <TvShowCard key={i} card={show} />)}
         </div>
       )}
 

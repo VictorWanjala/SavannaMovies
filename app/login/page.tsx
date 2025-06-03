@@ -12,11 +12,13 @@ import AuthContext from "../context/AuthContext";
 import { UserType } from "../types/UserTypes";
 import { toast } from "sonner";
 
-export default function Home() {
+export default function Login() {
   const context = useContext(UIContext);
   const { loading, setLoading } = context ?? {};
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
   const router = useRouter();
   const auth = useContext(AuthContext);
   const { saveUser } = auth ?? {};
@@ -52,8 +54,6 @@ export default function Home() {
         err?.response?.data?.message ||
           "Login error. Please check your credentials and try again."
       );
-      // if (setLoading) setLoading(false);
-      // return;
     } finally {
       toast.dismiss(toastId);
       if (setLoading) setLoading(false);
@@ -61,36 +61,65 @@ export default function Home() {
   };
 
   return (
-    <div
-      className="min-h-screen flex justify-center items-center bg-no-repeat "
-      // style={{
-      //   backgroundImage: "url('/background.jpg')",
-      //   backgroundSize: "cover",
-      //   backgroundPosition: "center",
-      // }}
-    >
-      <div className="border border-gray-300 rounded-2xl p-5 bg-white flex flex-col gap-4 w-1/4 max-md:w-full max-md:mx-2">
-        <h3 className="text-center">Login</h3>
-        <div className="flex flex-col gap-2">
-          <Label>Email</Label>
-          <Input value={email} onChange={(e) => setEmail(e.target.value)} />
-          <Label>Password</Label>
-          <Input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <Button className="rounded" onClick={handleSubmit} disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
-        </Button>
-        <div className="flex justify-center items-center my-1">
-          <span className="text-sm text-gray-500">
-            Don&rsquo;t have an account?{" "}
-            <a href="/signup" className="text-secondary hover:underline">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 to-white px-4">
+      <div className="w-full max-w-md p-8 rounded-2xl shadow-lg bg-white border border-gray-200">
+        <h2 className="text-2xl font-semibold text-center text-secondary mb-6">
+          Welcome Back
+        </h2>
+
+        <div className="space-y-4">
+          <div>
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              placeholder="Enter your email"
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
+              className="text-gray-500"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="password">Password</Label>
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                placeholder="Enter your password"
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={loading}
+                className="text-gray-500"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-2 flex items-center text-xs text-gray-500 hover:text-secondary"
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
+            </div>
+          </div>
+
+          <Button
+            className="w-full rounded-2xl"
+            onClick={handleSubmit}
+            disabled={loading || !email || !password}
+          >
+            {loading ? "Logging in..." : "Login"}
+          </Button>
+
+          <p className="text-sm text-center text-gray-500">
+            Don’t have an account?{" "}
+            <a
+              href="/signup"
+              className="text-secondary hover:underline font-medium"
+            >
               Sign Up
             </a>
-          </span>
+          </p>
         </div>
       </div>
     </div>
